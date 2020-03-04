@@ -1,0 +1,5 @@
+---
+- name: Inicio de PlayBook Reinicio Fuse
+  hosts: all
+  roles:
+    - Fuse

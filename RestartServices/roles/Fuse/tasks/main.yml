@@ -1,0 +1,20 @@
+---
+- name: Deteniendo Servicio Fuse - Maquina {{ ansible_hostname }}
+  service:
+    name: fuse
+    state: stopped
+
+- pause:
+    minutes: 1
+
+- name: Iniciando Servicio Fuse - Maquina {{ ansible_hostname }}
+  service:
+    name: fuse
+    state: started
+
+- pause:
+    seconds: 30
+    
+- name: Verificando Puerto de Administracion - Maquina {{ ansible_hostname }}
+  shell: if [[ $(netstat -an | grep 8080 | grep LISTEN | wc -l) -eq 1 ]]; then echo "Puerto de Administracion Activo"; else echo "Puerto de Administracion Inactivo";fi
+  register: Port_Fuse
