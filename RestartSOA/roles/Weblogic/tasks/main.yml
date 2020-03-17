@@ -1,0 +1,3 @@
+---
+- include: System_Operation.yml
+- include: Data_Weblogic.yml

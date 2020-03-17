@@ -1,0 +1,12 @@
+---
+- name: "Union HTML's"
+  shell: "cat /tmp/Check_WeblogicP_{{ DATE.stdout }}.html >> /tmp/CheckState_{{ DATE.stdout }}.html"
+
+- name: "Eliminacion Archivos"
+  file: 
+    path: "{{ item }}"
+    state: absent 
+  with_items:
+    - "/tmp/Check_WeblogicP_{{ DATE.stdout }}.html"
+    - "/tmp/CheckState.py"
+- debug: msg='Creado por:Juan Jose Quintero R.'

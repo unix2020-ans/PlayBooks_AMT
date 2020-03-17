@@ -1,0 +1,17 @@
+---
+- name: "Verificacion Variables de Entorno"
+  shell:  "echo {{ lookup('env','ORACLE_HOME') }}"
+  register: MW_HOME
+- name: "Verificacion Variables de Entorno"
+  shell:  "echo {{ lookup('env','DOMAIN_BASE_SOA') }}"
+  register: DOMAIN_SOA
+
+- debug: msg='{{ DOMAIN_SOA.stdout }}'
+
+- name: "Template Weblogic"
+  template: src=CheckState.j2.py dest=/tmp/CheckState.py
+- name: "Ejecucion WLST" 
+  shell: "{{ MW_HOME.stdout }}/wlserver/common/bin/wlst.sh /tmp/CheckState.py"
+- name: "Template Weblogic HTMl"
+  template: src=CheckState.j2.html dest=/tmp/CheckState_{{ DATE.stdout }}.html
+- include: Join_Files.yml

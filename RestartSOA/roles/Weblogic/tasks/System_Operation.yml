@@ -1,0 +1,13 @@
+---
+- name: "Uptime Machine y Fecha"
+  shell: uptime
+  register: uptime
+- name: "Uptime Machine y Fecha"
+  shell: date "+%d%m%y%H%M%S"
+  register: DATE
+- name: "Memoria Fisica y CPU"
+  shell: free | grep -i mem | awk '{print ($4*100)/$2}'
+  register: memory_porcent_free
+- name: "Memoria Fisica y CPU"
+  shell: sar -u 1 1 | sed -n 4p | awk '{print $8}'
+  register: cpu_porcent_free

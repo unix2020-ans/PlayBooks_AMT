@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Paso a Operacion</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+<style>
+    /*
+    To change this license header, choose License Headers in Project Properties.
+    To change this template file, choose Tools | Templates
+    and open the template in the editor.
+    */
+    /* 
+        Created on : 3/06/2019, 05:34:42 PM
+        Author     : jquin
+    */
+
+    body{
+        margin:0;
+        padding:0;
+        background-color: #F9F8F8;
+    }
+    div.scrollmenu {
+       background-color: #333;
+        overflow: auto;
+        white-space: nowrap;
+        width: 100%;
+        text-align: center;
+    }
+
+    div.scrollmenu a {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 20px 14px;
+        text-decoration: none;
+        font-family: "Segoe UI",Arial,sans-serif;
+        font-size: larger;
+        font-weight: bold;
+    }
+
+    div.scrollmenu a:hover {
+        background-color: #777;
+    }
+    .margin-table{
+        margin-left:20px;
+    }
+    table.tabla{
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        margin: 10px;
+        width: 1300px;
+    }
+
+    table.tabla td, table.tabla th{
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    table.tabla tr:nth-child(even){
+        background-color: #f2f2f2;
+    }
+
+    table.tabla tr:hover {
+        background-color: #ddd;
+    }
+
+    table.tabla th {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center;
+        background-color: #356C9C;
+        color: white;
+    }
+
+</style>
+<body>
+    <div id="menu">
+        <div class="scrollmenu">
+        <a>Weblogic - AMT</a>
+        </div>        
+        <div class="margin-table">
+            <table class="tabla">
+              <tbody>
+                <tr>
+                    <th colspan="3">DISTRIBUCION DE SO</th>
+                    <th colspan="3">FECHA</th>
+                </tr>
+                <tr>
+                    <td colspan="3">{{ ansible_distribution }} {{ ansible_distribution_version }}_{{ ansible_machine }}</td>
+                    <td colspan="3">{{ ansible_date_time.date }}</td>
+                </tr>
+                <tr>
+                    <th colspan="3">HOSTNAME</th>
+                    <th colspan="3">UPTIME MAQUINA</th>
+                </tr>
+                <tr>
+                    <td colspan="3">{{ ansible_hostname }}</td>
+                    <td colspan="3">{{ uptime.stdout }}</td>
+                </tr>
+                <tr>
+                    <th colspan="3">MEMORIA FISICA</th>
+                    <th colspan="3">CPU</th>
+                </tr>
+                <tr>
+                    <th colspan="3">TAMAÑO</th>
+                    <th colspan="3">CORES</th>
+                </tr>
+                <tr>
+                    <td>{{ ansible_memory_mb.real.total }}</td>
+                    <td>{{ ansible_processor_cores }}</td>
+                </tr>

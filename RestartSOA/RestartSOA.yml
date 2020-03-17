@@ -1,0 +1,5 @@
+---
+- name: "Paso Operacion - Weblogic"
+  hosts: all
+  roles:
+      - Weblogic
