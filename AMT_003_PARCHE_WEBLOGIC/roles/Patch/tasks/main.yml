@@ -46,4 +46,5 @@
 
 
 - name: Descomprimiendo Archivo .zip ...
-  shell: "unzip {{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
+  shell: "jar xvf {{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
+  command_warnings: False
