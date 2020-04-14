@@ -2,18 +2,22 @@
 - name: Obteniendo Ruta ORACLE_HOME
   shell:  "echo $ORACLE_HOME"
   register: MW_HOME
+  become_user: weblogic
 
 - name: Obteniendo Version Weblogic
   shell: cd {{ MW_HOME.stdout }}/wlserver/server/bin/; . ./setWLSEnv.sh; java weblogic.version
   register: WeblogicVersion
+  become_user: weblogic
 
 - name: Obteniendo Version de OPatch
   shell: cd {{ MW_HOME.stdout }}/OPatch;./opatch version
   register: VersionOpatch
+  become_user: weblogic
 
 - name: Obteniendo ID de Parches Instalados
   shell: cd {{ MW_HOME.stdout }}/OPatch;./opatch lspatches
   register: IDPatch
+  become_user: weblogic
 
 - name: Creando Directorios de Parche ...
   file:
@@ -22,6 +26,7 @@
     owner: weblogic
     group: weblogic
     mode: '0775'
+  become_user: weblogic
 
 - name: Transferencia Archivo que Contiene Parche
   fetch:
