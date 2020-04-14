@@ -1,0 +1,7 @@
+---
+- name: Iniciando Instalacion de PSU
+  hosts: all
+  become: yes
+  become_user: weblogic
+  roles:
+    - Patch 

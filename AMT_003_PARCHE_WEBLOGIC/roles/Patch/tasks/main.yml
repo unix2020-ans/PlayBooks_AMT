@@ -1,0 +1,39 @@
+---
+- name: Obteniendo Ruta ORACLE_HOME
+  shell:  "echo $ORACLE_HOME"
+  register: MW_HOME
+
+- name: Obteniendo Version Weblogic
+  shell: cd {{ MW_HOME.stdout }}/wlserver/server/bin/; . ./setWLSEnv.sh; java weblogic.version
+  register: WeblogicVersion
+
+- name: Obteniendo Version de OPatch
+  shell: cd {{ MW_HOME.stdout }}/OPatch;./opatch version
+  register: VersionOpatch
+
+- name: Obteniendo ID de Parches Instalados
+  shell: cd {{ MW_HOME.stdout }}/OPatch;./opatch lspatches
+  register: IDPatch
+
+- name: Creando Directorios de Parche ...
+  file:
+    path: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP"
+    state: directory
+
+- name: Transferencia Archivo que Contiene Parche
+  fetch:
+      dest: "/tmp/{{ Name_File }}"
+      src: "{{ Route }}/{{ Name_File }}"
+      flat: yes
+  # ---- Servidor Remoto de donde trae el archivo: Suse12 y es enviado a AWX ----
+  delegate_to: 172.18.91.87
+
+- name: Copia Archivos del Parche
+  copy:
+    dest: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
+    src: "/tmp/{{ Name_File }}"
+
+- name: Descomprimiendo Archivo .zip ...
+  unarchive:
+    src: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
+    dest: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/"
