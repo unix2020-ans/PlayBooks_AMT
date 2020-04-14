@@ -46,9 +46,4 @@
 
 
 - name: Descomprimiendo Archivo .zip ...
-  unarchive:
-    src: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
-    dest: "{{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/"
-    owner: weblogic
-    group: weblogic
-    mode: '0775'
+  shell: "unzip {{ MW_HOME.stdout }}/OPatch/OPATCH_TOP/{{ Name_File }}"
