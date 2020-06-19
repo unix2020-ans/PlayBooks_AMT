@@ -45,6 +45,7 @@
 
 - name: "Ejecucion WLST" 
   shell: "{{ MW_HOME.stdout }}/wlserver/common/bin/wlst.sh /tmp/CheckState.py"
+  become: yes
   become_user: weblogic
 
 - include: Join_Files.yml
