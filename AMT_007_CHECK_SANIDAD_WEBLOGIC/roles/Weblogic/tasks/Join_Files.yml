@@ -3,17 +3,17 @@
   shell: "cat /tmp/Check_WeblogicP_{{ DATE.stdout }}.html"
   register: CheckWeblogic
   
-- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ id_asgard }}
+- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ DATE.stdout }}
   file:
-      path: /opt/Tomcat9/webapps/{{ id_asgard }}
+      path: /opt/Tomcat9/webapps/{{ DATE.stdout }}
       state: directory
       mode: '0770'
   delegate_to: 172.22.16.179
   run_once: true
 
-- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ id_asgard }}
+- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ DATE.stdout }}
   file:
-      path: /opt/Tomcat9/webapps/{{ id_asgard }}/
+      path: /opt/Tomcat9/webapps/{{ DATE.stdout }}/
       state: directory
       mode: '0770'
   delegate_to: 172.22.16.179
@@ -22,14 +22,14 @@
 - name: "Template Weblogic HTML"
   template: 
     src: CheckState.j2.html 
-    dest: /opt/Tomcat9/webapps/{{ id_asgard }}//index.html
+    dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}//index.html
     mode: '0777'
   delegate_to: 172.22.16.179
 
 - name: Creacion Vista Inicial (HTML)
   template:
       src: intermediate.html.j2.html
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/intermediate.html
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/intermediate.html
       mode: '777'
   run_once: true
   delegate_to: 172.22.16.179
@@ -37,7 +37,7 @@
 - name: Creacion del Cierre
   template:
       src: Final.html.j2.html
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/Final.html
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/Final.html
       mode: '777'
   delegate_to: 172.22.16.179   
   run_once: true
@@ -45,26 +45,26 @@
 - name: Creacion Vista Inicial (Styles)
   template:
       src: Style.css.j2.css
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Style.css
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ ansible_hostname }}Style.css
       mode: '777'
   delegate_to: 172.22.16.179
 
 - name: Creacion de Botones
   template:
       src: botones.html.j2.html
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Botones.html
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ ansible_hostname }}Botones.html
       mode: '777'
   delegate_to: 172.22.16.179
 
 - name: Creacion de Tablas
   template:
       src: tablas.j2.html
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Tabla.html
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ ansible_hostname }}Tabla.html
       mode: '777'
   delegate_to: 172.22.16.179  
 
 - name: Transferencia de Vista HTML
-  shell: echo "{{ item }}" >> /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Tabla.html
+  shell: echo "{{ item }}" >> /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ ansible_hostname }}Tabla.html
   with_items:
     - "{{ CheckWeblogic.stdout_lines }}"
   delegate_to: 172.22.16.179
@@ -72,12 +72,12 @@
 - name: Creacion de Primer Script
   template:
       src: ScriptBotones.js.j2.js
-      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}ScriptBotones.js
+      dest: /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ ansible_hostname }}ScriptBotones.js
       mode: '777'
   delegate_to: 172.22.16.179   
 
 - name: Creacion Vista HTML
-  shell: cat /opt/Tomcat9/webapps/{{ id_asgard }}/{{ item }} >> /opt/Tomcat9/webapps/{{ id_asgard }}/index.html
+  shell: cat /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ item }} >> /opt/Tomcat9/webapps/{{ DATE.stdout }}/index.html
   with_items:
     - "*Style.css"
     - "intermediate.html"
@@ -98,7 +98,7 @@
 
 - name: Limpiando Archivos...
   file:
-      path: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ item }}
+      path: /opt/Tomcat9/webapps/{{ DATE.stdout }}/{{ item }}
       state: absent
   with_items:
     - "{{ ansible_hostname }}Style.css"
@@ -109,7 +109,7 @@
     - "Final.html"
   delegate_to: 172.22.16.179
 
-- debug: msg='Por Favor ingresar a la URL:http://172.22.16.179:443/{{ id_asgard }} Para poder observar la verificacion del servicio.'
+- debug: msg='Por Favor ingresar a la URL:http://172.22.16.179:443/{{ DATE.stdout }} Para poder observar la verificacion del servicio.'
   run_once: yes
 
 - debug: msg='Creado por:Juan Jose Quintero R.'
@@ -150,6 +150,6 @@
     cc: 
     - Juan Jose Quintero Reatiga <Juan.Quinteror.Ext@claro.com.co>
     attach:
-    - /opt/Tomcat9/webapps/{{ id_asgard }}/index.html
+    - /opt/Tomcat9/webapps/{{ DATE.stdout }}/index.html
   delegate_to: 172.22.16.179
   run_once: yes  
