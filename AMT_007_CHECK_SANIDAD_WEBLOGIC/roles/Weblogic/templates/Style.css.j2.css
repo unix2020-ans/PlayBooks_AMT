@@ -1,0 +1,7 @@
+.Table-{{ ansible_hostname  | regex_replace('-','_')}}.active{
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.Table-{{ ansible_hostname  | regex_replace('-','_')}}{
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transition: clip-path .3s ease-out;
+}

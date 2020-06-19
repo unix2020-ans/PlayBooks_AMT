@@ -1,0 +1,4 @@
+        <div class="contenerdor-btn">
+            <button class="Open-{{ ansible_hostname  | regex_replace('-','_')}} button" id="Open-{{ ansible_hostname  | regex_replace('-','_')}}">{{ ansible_hostname  | regex_replace('-','_')}}</button>
+        </div>
+    

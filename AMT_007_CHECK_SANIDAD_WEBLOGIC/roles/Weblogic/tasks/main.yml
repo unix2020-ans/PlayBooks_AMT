@@ -1,0 +1,49 @@
+---
+# ---- Datos Sistema Operativo ----
+- name: "Uptime Machine y Fecha"
+  shell: uptime
+  register: uptime
+
+- name: "Uptime Machine y Fecha"
+  shell: date "+%d%m%y%H%M%S"
+  register: DATE
+  run_once: yes
+  delegate_to: localhost
+
+- name: "Memoria Fisica y CPU"
+  shell: free | grep -i mem | awk '{print ($4*100)/$2}'
+  ignore_errors: yes
+  register: memory_porcent_free
+
+- name: "Memoria Fisica y CPU"
+  shell: sar -u 1 1 | sed -n 4p | awk '{print $8}'
+  ignore_errors: yes
+  register: cpu_porcent_free
+
+# ---- Datos Servicio de Aplicacion Weblogic ----
+- name: "Verificacion Variables de Entorno"
+  shell:  cat /etc/profile | grep -w ORACLE_HOME | grep -v '#' | awk -F = '{print $NF}' | sed "s/'//g" | sed 's/"//g'
+  register: MW_HOME
+
+- name: "Verificacion Variables de Entorno"
+  shell: cat /etc/profile | grep -w DOMAIN_BASE | grep -v '#' | awk -F = '{print $NF}' | sed "s/'//g" | sed 's/"//g'
+  register: DOMAIN_BASE
+
+- debug: msg='{{ DOMAIN_BASE.stdout }}'
+
+- name: Capturando Informacion  Filesystem
+  shell: df -P {{ DOMAIN_BASE.stdout }} | sed 1d | awk '{print "<tr><td colspan=3>"$NF"</td><td colspan=3>"$5"</td></tr>"}'
+  register: FilesystemDomain
+
+- name: "Template Weblogic"
+  template: 
+    src: CheckState.j2.py 
+    dest: /tmp/CheckState.py
+    mode: '0777'
+    owner: 'weblogic'
+
+- name: "Ejecucion WLST" 
+  shell: "{{ MW_HOME.stdout }}/wlserver/common/bin/wlst.sh /tmp/CheckState.py"
+  become_user: weblogic
+
+- include: Join_Files.yml

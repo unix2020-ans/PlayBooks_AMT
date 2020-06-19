@@ -1,0 +1,6 @@
+---
+- name: "Paso Operacion - Weblogic"
+  hosts: '{{ HOST }}'
+  become: yes
+  roles:
+      - Weblogic

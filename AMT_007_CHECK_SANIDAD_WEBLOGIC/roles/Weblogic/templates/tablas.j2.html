@@ -1,0 +1,27 @@
+</div>
+<table class="Table-{{ ansible_hostname  | regex_replace('-','_')}} tabla" id="Table-{{ ansible_hostname  | regex_replace('-','_')}}">
+    <tbody>
+      <tr>
+          <th colspan="3">DISTRIBUCION DE SO</th>
+          <th colspan="3">FECHA</th>
+      </tr>
+      <tr>
+          <td colspan="3">{{ ansible_distribution }} {{ ansible_distribution_version }}_{{ ansible_machine }}</td>
+          <td colspan="3">{{ ansible_date_time.date }}</td>
+      </tr>
+      <tr>
+          <th colspan="3">HOSTNAME</th>
+          <th colspan="3">UPTIME MAQUINA</th>
+      </tr>
+      <tr>
+          <td colspan="3">{{ ansible_hostname }}</td>
+          <td colspan="3">{{ uptime.stdout }}</td>
+      </tr>
+      <tr>
+          <th colspan="6">FILESYSTEM</th>
+      </tr>
+      <tr>
+          <th colspan="3">MONTAJE</th>
+          <th colspan="3">TAMAÑO</th>
+      </tr>
+      {{ FilesystemDomain.stdout }}

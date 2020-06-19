@@ -1,0 +1,116 @@
+---    
+- name: "Union HTML's"
+  shell: "cat /tmp/Check_WeblogicP_{{ DATE.stdout }}.html"
+  register: CheckWeblogic
+  
+- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ id_asgard }}
+  file:
+      path: /opt/Tomcat9/webapps/{{ id_asgard }}
+      state: directory
+      mode: '0770'
+  delegate_to: 172.22.16.179
+  run_once: true
+
+- name: Creacion Carpeta - HTML /opt/Tomcat9/webapps/{{ id_asgard }}
+  file:
+      path: /opt/Tomcat9/webapps/{{ id_asgard }}/
+      state: directory
+      mode: '0770'
+  delegate_to: 172.22.16.179
+  run_once: true
+
+- name: "Template Weblogic HTML"
+  template: 
+    src: CheckState.j2.html 
+    dest: /opt/Tomcat9/webapps/{{ id_asgard }}//index.html
+    mode: '0777'
+  delegate_to: 172.22.16.179
+
+- name: Creacion Vista Inicial (HTML)
+  template:
+      src: intermediate.html.j2.html
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/intermediate.html
+      mode: '777'
+  run_once: true
+  delegate_to: 172.22.16.179
+
+- name: Creacion del Cierre
+  template:
+      src: Final.html.j2.html
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/Final.html
+      mode: '777'
+  delegate_to: 172.22.16.179   
+  run_once: true
+
+- name: Creacion Vista Inicial (Styles)
+  template:
+      src: Style.css.j2.css
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Style.css
+      mode: '777'
+  delegate_to: 172.22.16.179
+
+- name: Creacion de Botones
+  template:
+      src: botones.html.j2.html
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Botones.html
+      mode: '777'
+  delegate_to: 172.22.16.179
+
+- name: Creacion de Tablas
+  template:
+      src: tablas.j2.html
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Tabla.html
+      mode: '777'
+  delegate_to: 172.22.16.179  
+
+- name: Transferencia de Vista HTML
+  shell: echo "{{ item }}" >> /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}Tabla.html
+  with_items:
+    - "{{ CheckWeblogic.stdout_lines }}"
+  delegate_to: 172.22.16.179
+
+- name: Creacion de Primer Script
+  template:
+      src: ScriptBotones.js.j2.js
+      dest: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ ansible_hostname }}ScriptBotones.js
+      mode: '777'
+  delegate_to: 172.22.16.179   
+
+- name: Creacion Vista HTML
+  shell: cat /opt/Tomcat9/webapps/{{ id_asgard }}/{{ item }} >> /opt/Tomcat9/webapps/{{ id_asgard }}/index.html
+  with_items:
+    - "*Style.css"
+    - "intermediate.html"
+    - "*Botones.html"
+    - "*Tabla.html"
+    - "*ScriptBotones.js"
+    - "Final.html"
+  delegate_to: 172.22.16.179
+  run_once: true
+
+- name: "Eliminacion Archivos"
+  file: 
+    path: "{{ item }}"
+    state: absent 
+  with_items:
+    - "/tmp/Check_WeblogicP_{{ DATE.stdout }}.html"
+    - "/tmp/CheckState.py"
+
+- name: Limpiando Archivos...
+  file:
+      path: /opt/Tomcat9/webapps/{{ id_asgard }}/{{ item }}
+      state: absent
+  with_items:
+    - "{{ ansible_hostname }}Style.css"
+    - "intermediate.html"
+    - "{{ ansible_hostname }}Botones.html"
+    - "{{ ansible_hostname }}Tabla.html"
+    - "{{ ansible_hostname }}ScriptBotones.js"
+    - "Final.html"
+  delegate_to: 172.22.16.179
+
+- debug: msg='Por Favor ingresar a la URL:http://172.22.16.179:443/{{ id_asgard }} Para poder observar la verificacion del servicio.'
+  run_once: yes
+
+- debug: msg='Creado por:Juan Jose Quintero R.'
+  run_once: yes
