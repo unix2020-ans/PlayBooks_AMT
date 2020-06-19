@@ -7,6 +7,7 @@
 - name: "Uptime Machine y Fecha"
   shell: date "+%d%m%y%H%M%S"
   register: DATE
+  ignore_errors: yes
   run_once: yes
   #delegate_to: localhost
 
